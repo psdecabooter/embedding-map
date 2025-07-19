@@ -3,15 +3,15 @@ import pandas as pd
 import asyncio
 import aiofiles
 import json
-# import torch
-# from transformers import AutoTokenizer, AutoModel
+import torch
+from sentence_transformers import SentenceTransformer
 
 
 class SemanticEmbeddingGenerator(object):
-    def __init__(self, model_name: str):
-        # self.model = AutoModel.from_pretrained(model_name)
-        # self.tokenizer = AutoTokenizer.from_pretrained(model_name, device_map="auto")
-        pass
+    def __init__(self, model_name: str, device: str):
+        self.model_name = model_name
+        self.device = device
+        self.model = SentenceTransformer(model_name, device=device)
 
     async def process_sat_file(self, file_path: str) -> pd.DataFrame | None:
         async with aiofiles.open(file_path, "r") as f:
@@ -51,7 +51,21 @@ class SemanticEmbeddingGenerator(object):
         )
 
     def generate_embeddings(self, directory_path: str):
-        # print(os.listdir(directory_path)[:5])
+        # Get data from the json files
         sparse_df, compact_df = asyncio.run(self.read_sat_data(directory_path))
-        print(sparse_df.head)
-        print(compact_df.head)
+        # Add embeddings to the dataframes
+        sparse_embeddings = self.model.encode(
+            sparse_df["embedding_text"].to_list(),
+            normalize_embeddings=True,
+            show_progress_bar=True,
+        )
+        compact_embeddings = self.model.encode(
+            compact_df["embedding_text"].to_list(),
+            normalize_embeddings=True,
+            show_progress_bar=True,
+        )
+        sparse_df["embedding"] = sparse_embeddings.tolist()
+        compact_df["embedding"] = compact_embeddings.tolist()
+        # Save the dataframes
+        sparse_df.to_json(f"{self.model_name}_sparse_embedding_data.json", orient="records", indent=4)
+        compact_df.to_json(f"{self.model_name}_compact_embedding_data.json", orient="records", indent=4)

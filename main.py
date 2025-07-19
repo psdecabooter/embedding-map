@@ -1,8 +1,12 @@
 from embeddings.src import semantic_embeddings
+import torch
 
 
 def main():
-    embedding = semantic_embeddings.SemanticEmbeddingGenerator("fart")
+    device = "cuda" if torch.cuda.is_available() else "cpu"
+    embedding = semantic_embeddings.SemanticEmbeddingGenerator(
+        "sentence-transformers/all-MiniLM-L6-v2", device
+    )
     embedding.generate_embeddings("output/")
 
 
