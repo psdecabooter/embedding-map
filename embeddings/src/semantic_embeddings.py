@@ -3,8 +3,8 @@ import pandas as pd
 import asyncio
 import aiofiles
 import json
-import torch
 from sentence_transformers import SentenceTransformer
+import torch
 
 
 class SemanticEmbeddingGenerator(object):
@@ -67,5 +67,19 @@ class SemanticEmbeddingGenerator(object):
         sparse_df["embedding"] = sparse_embeddings.tolist()
         compact_df["embedding"] = compact_embeddings.tolist()
         # Save the dataframes
-        sparse_df.to_json(f"{self.model_name}_sparse_embedding_data.json", orient="records", indent=4)
-        compact_df.to_json(f"{self.model_name}_compact_embedding_data.json", orient="records", indent=4)
+        sparse_df.to_json(
+            f"{self.model_name}_sparse_embedding_data.json", orient="records", indent=4
+        )
+        compact_df.to_json(
+            f"{self.model_name}_compact_embedding_data.json", orient="records", indent=4
+        )
+
+    def generate_embedding(self, directory_path: str) -> torch.Tensor:
+        with open(directory_path, "r") as f:
+            data_json = json.loads(f.read())
+        embedding_json = {}
+        # Pull out necessary data
+        embedding_json["arch"] = data_json["arch"]
+        embedding_json["gates"] = data_json["gates"]
+        embedding_text = json.dumps(embedding_json)
+        return self.model.encode(embedding_text, normalize_embeddings=True)
