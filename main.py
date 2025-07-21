@@ -1,8 +1,7 @@
-from embeddings.src import semantic_embeddings, db_connection
-import psycopg
-import torch
+from similarity_mapping.src.types import ConnectionConfig
+from similarity_mapping.src import db_connection
 
-CONNECTION = db_connection.ConnectionConfig(
+CONNECTION = ConnectionConfig(
     # host="host.docker.internal",
     # host="localhost",
     # host="0.0.0.0",
@@ -15,14 +14,7 @@ CONNECTION = db_connection.ConnectionConfig(
 
 
 def main():
-    # device = "cuda" if torch.cuda.is_available() else "cpu"
-    # embedding = semantic_embeddings.SemanticEmbeddingGenerator(
-    #     "sentence-transformers/all-MiniLM-L6-v2", device
-    # )
-    # embedding.generate_embeddings("output/")
-    db = db_connection.EmbeddingConnection(CONNECTION)
-    db.create_mappings_table(vector_size=384)
-    db.insert_mappings("embeddings/embedding_tables/compact_embedding_data.json")
+    db = db_connection.MappingConnection(CONNECTION)
     db.close_connection()
 
 
