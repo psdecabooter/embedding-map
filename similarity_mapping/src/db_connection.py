@@ -28,7 +28,7 @@ class MappingConnection:
         FROM mappings
         ORDER BY embedding <=> {}::vector
         LIMIT {};
-        """).format(query_embedding, retrieval_num)
+        """).format(query_embedding.tolist(), retrieval_num)
         self.cursor.execute(retrieve_command)
         similar_objects = self.cursor.fetchall()
-        print(similar_objects)
+        return similar_objects

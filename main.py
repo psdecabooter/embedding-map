@@ -1,5 +1,7 @@
 from similarity_mapping.src.types import ConnectionConfig
 from similarity_mapping.src import db_connection
+from embeddings.src import semantic_embeddings
+import torch
 
 CONNECTION = ConnectionConfig(
     # host="host.docker.internal",
@@ -11,10 +13,16 @@ CONNECTION = ConnectionConfig(
     password="postgres",
     dbname="postgres",
 )
+MODEL_NAME: str = "sentence-transformers/all-MiniLM-L6-v2"
 
 
 def main():
+    device = "cuda" if torch.cuda.is_available() else "cpu"
+    embedder = semantic_embeddings.SemanticEmbeddingGenerator(MODEL_NAME, device)
     db = db_connection.MappingConnection(CONNECTION)
+    test_embedding = embedder.generate_embedding("./test_mapping.json")
+    close_mappings = db.retrieve_similar(test_embedding, 1)
+    print(close_mappings)
     db.close_connection()
 
 

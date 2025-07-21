@@ -23,3 +23,9 @@ class Mapping:
     map: dict[str, int]
     arch: Architecture
     gates: list[list[int]]
+
+
+@dataclass
+class Circuit:
+    arch: Architecture
+    gates: list[list[int]]

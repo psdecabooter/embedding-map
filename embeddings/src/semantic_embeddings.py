@@ -9,9 +9,11 @@ import torch
 
 class SemanticEmbeddingGenerator(object):
     def __init__(self, model_name: str, device: str):
+        print("Loading model...")
         self.model_name = model_name
         self.device = device
         self.model = SentenceTransformer(model_name, device=device)
+        print("Model loaded")
 
     async def process_sat_file(self, file_path: str) -> pd.DataFrame | None:
         async with aiofiles.open(file_path, "r") as f:
