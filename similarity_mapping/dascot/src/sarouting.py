@@ -201,6 +201,7 @@ def best_realizable_set_found(
     termination_temp=0.1,
     take_first_ms=False,
 ):
+    print(mapping)
     grid_len = arch["width"]
     grid_height = arch["height"]
     msf_faces = arch["magic_states"]
@@ -385,7 +386,7 @@ def sim_anneal_route(
     grid_len = arch["width"]
     grid_height = arch["height"]
     msf_faces = arch["magic_states"]
-    mapping = {q: p for (q, p) in mapping}
+    # mapping = {q: p for (q, p) in mapping} Removed conversion, doing it earlier
     gates_id_table = {i: gate for i, gate in enumerate(gates)}
     crit_dict = {}
     if temperature > termination_temp:

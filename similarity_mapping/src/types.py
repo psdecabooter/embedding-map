@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from typing import Any
+from qiskit import QuantumCircuit
 
 
 @dataclass
@@ -44,6 +45,45 @@ class Circuit:
 
     def to_dict(self) -> dict[str, Any]:
         return {"arch": self.arch.to_dict(), "gates": self.gates}
+
+
+@dataclass
+class Route:
+    id: int
+    op: str
+    qubits: list[int]
+    path: list[int]
+
+
+@dataclass
+class Routing:
+    map: dict[str, int]
+    steps: list[Route]
+    arch: Architecture
+    gates: list[list[int]]
+
+
+def qasm_from_gates(gates: list[list[int]]) -> QuantumCircuit:
+    qcircuit = QuantumCircuit()
+    for gate in gates:
+        if len(gate) == 1:
+            qcircuit.t(gate[0])
+        else:
+            qcircuit.cx(gate[0], gate[1])
+    return qcircuit
+
+
+def gates_depth(gates: list[list[int]]) -> dict[int, int]:
+    """
+    Gets the depth of the gates of the circuit per qubit.
+    """
+    depth_dict: dict[int, int] = {}
+    for gate in gates:
+        for qubit in gate:
+            if qubit not in depth_dict:
+                depth_dict[qubit] = 0
+            depth_dict[qubit] += 1
+    return depth_dict
 
 
 def parse_architecture_safe(source: dict) -> Architecture:
@@ -99,3 +139,14 @@ def parse_circuit_safe(source: dict) -> Circuit:
         for gate in source["gates"]
     )
     return Circuit(arch, source["gates"])
+
+
+def parse_route_unsafe(step: list[tuple]) -> list[Route]:
+    """
+    Squishes t and tdg gates to the same thing: t
+    """
+    routes: list[Route] = []
+    for route in step:
+        op = "t" if len(route[1]) == 1 else "cx"
+        routes.append(Route(route[0], op, route[1], route[2]))
+    return routes

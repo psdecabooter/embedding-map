@@ -3,8 +3,10 @@ from similarity_mapping.src.types import (
     parse_mapping_safe,
     parse_circuit_safe,
 )
-from similarity_mapping.src import db_connection, similarity_map
+from similarity_mapping.src import db_connection, similarity_map, dascot_connection
 from embeddings.src import semantic_embeddings
+from dataclasses import asdict
+import json
 import torch
 
 CONNECTION = ConnectionConfig(
@@ -31,7 +33,15 @@ def main():
     mapper = similarity_map.SimilarityMapper(
         circuit=circuit, similar_mapping=similar_mapping
     )
-    print(mapper.soft_map())
+    mapping = mapper.soft_map()
+    print(mapping)
+    dascot = dascot_connection.Dascot(300, 300)
+    routing = dascot.route(mapping)
+    assert routing is not None
+    print(routing)
+    with open("out.json", "w") as f:
+        jstr = json.dumps(asdict(routing), indent=4)
+        f.write(jstr)
 
     db.close_connection()
 
