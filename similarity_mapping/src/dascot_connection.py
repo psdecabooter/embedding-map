@@ -16,7 +16,7 @@ class Dascot:
         self.route_timeout = routing_timeout
 
     def bootstrapped_map(self, mapping: Mapping) -> Mapping:
-        qcircuit = qasm_from_gates(mapping.gates)
+        qcircuit = qasm_from_gates(mapping.gates, len(mapping.arch.alg_qubits))
         sim_anneal_params = [100, 0.1, 0.1]
         depth = qcircuit.depth(
             filter_function=lambda x: x[0].name in ["cx", "t", "tdg"]
@@ -26,11 +26,12 @@ class Dascot:
             sim_anneal_params[1] / depth,
             10 * sim_anneal_params[2] / depth,
         ]
+        initial_mapping = {int(k): v for k, v in mapping.map.items()}
         phased_map, _ = build_phased_map(
             extract_qubits_from_gates(mapping.gates),
             qcircuit,
-            mapping.arch,
-            initial_mapping=mapping.map,  # Pass in the mapping as the initial mapping
+            mapping.arch.__dict__,
+            initial_mapping=initial_mapping,  # Pass in the mapping as the initial mapping
             include_t=True,
             timeout=self.map_timeout,
             *scaled_sim_anneal_params,
@@ -40,7 +41,7 @@ class Dascot:
         return Mapping(arch=mapping.arch, gates=mapping.gates, map=map_dict)  # type: ignore
 
     def map(self, circuit: Circuit) -> Mapping:
-        qcircuit = qasm_from_gates(circuit.gates)
+        qcircuit = qasm_from_gates(circuit.gates, len(circuit.arch.alg_qubits))
         sim_anneal_params = [100, 0.1, 0.1]
         depth = qcircuit.depth(
             filter_function=lambda x: x[0].name in ["cx", "t", "tdg"]

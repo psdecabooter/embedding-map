@@ -336,12 +336,12 @@ def build_phased_map(
 ):
     grid_len = arch["width"]
     faces = arch["alg_qubits"]
-    map_tuples = (
-        build_random_map(log_qubits, arch)
-        if initial_mapping is None
-        else initial_mapping
-    )
-    map_flat = {t[0]: t[1] for t in map_tuples}
+    map_flat = {}
+    if initial_mapping is None:
+        map_tuples = build_random_map(log_qubits, arch)
+        map_flat = {t[0]: t[1] for t in map_tuples}
+    else:
+        map_flat = initial_mapping
     map_2d = {k: tuple(reversed(divmod(v, grid_len))) for k, v in map_flat.items()}
     initial_mapping = map_2d
     # initial_mapping = {i : tuple(reversed(divmod(faces[i], grid_len))) for i in range(log_num)}

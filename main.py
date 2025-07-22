@@ -20,22 +20,28 @@ CONNECTION = ConnectionConfig(
     dbname="postgres",
 )
 MODEL_NAME: str = "sentence-transformers/all-MiniLM-L6-v2"
+CIRCUIT_PATH = "./testy.json"
 
 
 def main():
     device = "cuda" if torch.cuda.is_available() else "cpu"
     embedder = semantic_embeddings.SemanticEmbeddingGenerator(MODEL_NAME, device)
     db = db_connection.MappingConnection(CONNECTION)
-    test_embedding = embedder.generate_embedding("./test_mapping.json")
+    with open(CIRCUIT_PATH, "r") as f:
+        text = f.read()
+        circuit = parse_circuit_safe(json.loads(text))
+    test_embedding = embedder.generate_embedding(CIRCUIT_PATH)
     close_mappings = db.retrieve_similar(test_embedding, 1)
     similar_mapping = parse_mapping_safe(close_mappings[0][0])
-    circuit = parse_circuit_safe(close_mappings[0][1])
     mapper = similarity_map.SimilarityMapper(
         circuit=circuit, similar_mapping=similar_mapping
     )
     mapping = mapper.soft_map()
     print(mapping)
     dascot = dascot_connection.Dascot(300, 300)
+
+    mapping = dascot.bootstrapped_map(mapping)
+
     routing = dascot.route(mapping)
     assert routing is not None
     print(routing)

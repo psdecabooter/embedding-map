@@ -63,9 +63,11 @@ class Routing:
     gates: list[list[int]]
 
 
-def qasm_from_gates(gates: list[list[int]]) -> QuantumCircuit:
-    qcircuit = QuantumCircuit()
+def qasm_from_gates(gates: list[list[int]], num_qubits: int) -> QuantumCircuit:
+    qcircuit = QuantumCircuit(num_qubits)
     for gate in gates:
+        print(gate)
+        print(len(gate))
         if len(gate) == 1:
             qcircuit.t(gate[0])
         else:

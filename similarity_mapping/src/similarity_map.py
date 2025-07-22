@@ -99,7 +99,7 @@ class SimilarityMapper:
                     self.similar_mapping.map[unmapped_mapping_qubits.pop()],
                     locations_remaining,
                 )
-        elif len_difference < 0:
+        elif len_difference > 0:
             # Circuit has more qubits than the mapping
             while len(unmapped_mapping_qubits) > 0:
                 new_map[unmapped_circuit_qubits.pop()], locations_remaining = (
