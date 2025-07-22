@@ -1,5 +1,9 @@
-from similarity_mapping.src.types import ConnectionConfig
-from similarity_mapping.src import db_connection
+from similarity_mapping.src.types import (
+    ConnectionConfig,
+    parse_mapping_safe,
+    parse_circuit_safe,
+)
+from similarity_mapping.src import db_connection, similarity_map
 from embeddings.src import semantic_embeddings
 import torch
 
@@ -22,7 +26,13 @@ def main():
     db = db_connection.MappingConnection(CONNECTION)
     test_embedding = embedder.generate_embedding("./test_mapping.json")
     close_mappings = db.retrieve_similar(test_embedding, 1)
-    print(close_mappings)
+    similar_mapping = parse_mapping_safe(close_mappings[0][0])
+    circuit = parse_circuit_safe(close_mappings[0][1])
+    mapper = similarity_map.SimilarityMapper(
+        circuit=circuit, similar_mapping=similar_mapping
+    )
+    print(mapper.soft_map())
+
     db.close_connection()
 
 
