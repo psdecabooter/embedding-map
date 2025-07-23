@@ -22,7 +22,7 @@ class SimilarityMapper:
         def distance(qubit_location) -> float:
             return (
                 abs(assignment_x - qubit_location % self.circuit.arch.width) ** 2
-                + abs(assignment_y - qubit_location % self.circuit.arch.height) ** 2
+                + abs(assignment_y - qubit_location // self.circuit.arch.height) ** 2
             )
 
         sorted_locations = sorted(circuit_locations, key=lambda x: distance(x))
@@ -47,7 +47,7 @@ class SimilarityMapper:
         if circuit_qubits != mapping_qubits:
             return None
         # Construct map
-        locations_remaining = self.circuit.arch.alg_qubits
+        locations_remaining = self.circuit.arch.alg_qubits.copy()
         new_map: dict[str, int] = {}
         for qubit in circuit_qubits:
             new_map[qubit], locations_remaining = self.find_closest_qubit_location(
@@ -80,17 +80,20 @@ class SimilarityMapper:
         mapping_qubits = set(self.similar_mapping.map.keys())
         new_map: dict[str, int] = {}
         # Partially apply mapping
+        # Gives priority to similar qubits
+        locations_remaining = self.circuit.arch.alg_qubits.copy()
         unmapped_mapping_qubits: set[str] = set()
         for qubit in mapping_qubits:
             if qubit in circuit_qubits:
-                new_map[qubit] = self.similar_mapping.map[qubit]
+                new_map[qubit], locations_remaining = self.find_closest_qubit_location(
+                    self.similar_mapping.map[qubit], locations_remaining
+                )
             else:
                 unmapped_mapping_qubits.add(qubit)
         unmapped_circuit_qubits: set[str] = set(
             [qubit for qubit in circuit_qubits if qubit not in new_map]
         )
 
-        locations_remaining = self.circuit.arch.alg_qubits
         len_difference = len(circuit_qubits) - len(mapping_qubits)
         if len_difference == 0:
             # Circuit and mapping have the same number of qubits

@@ -1,4 +1,4 @@
-from embeddings.src import db_connection
+from embeddings import db_connection
 import sys
 
 CONNECTION = db_connection.ConnectionConfig(

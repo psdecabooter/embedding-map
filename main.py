@@ -1,11 +1,11 @@
-from similarity_mapping.src.types import (
+from similarity_mapping.types import (
     ConnectionConfig,
     parse_mapping_safe,
     parse_circuit_safe,
     Architectures,
 )
-from similarity_mapping.src import db_connection, similarity_map, dascot_connection
-from embeddings.src import semantic_embeddings
+from similarity_mapping import db_connection, similarity_map, dascot_connection
+from embeddings import semantic_embeddings
 from dataclasses import asdict
 import json
 import torch

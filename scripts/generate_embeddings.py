@@ -1,4 +1,4 @@
-from embeddings.src import semantic_embeddings
+from embeddings import semantic_embeddings
 import torch
 import sys
 
