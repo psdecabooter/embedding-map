@@ -2,6 +2,7 @@ from similarity_mapping.src.types import (
     ConnectionConfig,
     parse_mapping_safe,
     parse_circuit_safe,
+    Architectures,
 )
 from similarity_mapping.src import db_connection, similarity_map, dascot_connection
 from embeddings.src import semantic_embeddings
@@ -39,8 +40,12 @@ def main():
     mapping = mapper.soft_map()
     print(mapping)
     dascot = dascot_connection.Dascot(300, 300)
-
-    mapping = dascot.bootstrapped_map(mapping)
+    circuit = dascot.extract_circuit_from_file(
+        "./14_sqrt8_260.qasm", Architectures.COMPACT
+    )
+    print("CIRC\n", circuit)
+    # mapping = dascot.bootstrapped_map(mapping)
+    mapping = dascot.map(circuit)
 
     routing = dascot.route(mapping)
     assert routing is not None

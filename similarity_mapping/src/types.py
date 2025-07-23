@@ -1,6 +1,12 @@
 from dataclasses import dataclass
 from typing import Any
 from qiskit import QuantumCircuit
+from enum import Enum
+
+
+class Architectures(Enum):
+    SQUARE_SPARSE = 0
+    COMPACT = 1
 
 
 @dataclass
