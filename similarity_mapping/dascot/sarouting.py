@@ -201,7 +201,7 @@ def best_realizable_set_found(
     termination_temp=0.1,
     take_first_ms=False,
 ):
-    print(mapping)
+    # print(mapping)
     grid_len = arch["width"]
     grid_height = arch["height"]
     msf_faces = arch["magic_states"]

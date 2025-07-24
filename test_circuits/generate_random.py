@@ -11,6 +11,10 @@ def make_qasm_text(num_qubits: int, circ_len: int) -> str:
         choice = random.randint(0, 2)
         qubit1 = random.randint(0, num_qubits - 1)
         qubit2 = random.randint(0, num_qubits - 1)
+        # Prevent duplicates
+        if qubit1 == qubit2:
+            qubit2 = (qubit2 + 1) % num_qubits
+        # Match to gate
         if choice == 0:
             text += f"t q[{qubit1}];\n"
         elif choice == 1:

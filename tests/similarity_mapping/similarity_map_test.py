@@ -12,6 +12,7 @@ from similarity_mapping.dascot.architecture import compact_layout, square_sparse
 
 TEST_ARCH_C4 = parse_architecture_safe(compact_layout(4, magic_states="all_sides"))
 """
+Compact 4 qubits
 Compact test architecture
 Architecture(
     height=5,
@@ -25,6 +26,7 @@ TEST_ARCH_S9 = parse_architecture_safe(
     square_sparse_layout(9, magic_states="all_sides")
 )
 """
+Square Spares 9 qubits
 Architecture(
     height=9, 
     width=9, 

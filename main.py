@@ -31,7 +31,7 @@ def main():
     with open(CIRCUIT_PATH, "r") as f:
         text = f.read()
         circuit = parse_circuit_safe(json.loads(text))
-    test_embedding = embedder.generate_embedding(CIRCUIT_PATH)
+    test_embedding = embedder.generate_embedding_from_file(CIRCUIT_PATH)
     close_mappings = db.retrieve_similar(test_embedding, 1)
     similar_mapping = parse_mapping_safe(close_mappings[0][0])
     mapper = similarity_map.SimilarityMapper(

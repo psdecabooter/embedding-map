@@ -9,6 +9,14 @@ class Architectures(Enum):
     COMPACT = 1
 
 
+def parse_arch_type(source: str) -> Architectures | None:
+    if source == "square_sparse_layout":
+        return Architectures.SQUARE_SPARSE
+    if source == "compact_layout":
+        return Architectures.COMPACT
+    return None
+
+
 @dataclass
 class ConnectionConfig:
     host: str
@@ -72,8 +80,6 @@ class Routing:
 def qasm_from_gates(gates: list[list[int]], num_qubits: int) -> QuantumCircuit:
     qcircuit = QuantumCircuit(num_qubits)
     for gate in gates:
-        print(gate)
-        print(len(gate))
         if len(gate) == 1:
             qcircuit.t(gate[0])
         else:

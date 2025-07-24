@@ -1,12 +1,12 @@
-from ..dascot.src.dascot import (
+from similarity_mapping.dascot.dascot import (
     TimeoutException,
     timeout_handler,
     extract_qubits_from_gates,
     extract_gates_from_file,
 )
-from ..dascot.src.architecture import square_sparse_layout, compact_layout
-from ..dascot.src.phased_graph import build_phased_map
-from ..dascot.src.sarouting import sim_anneal_route
+from similarity_mapping.dascot.architecture import square_sparse_layout, compact_layout
+from similarity_mapping.dascot.phased_graph import build_phased_map
+from similarity_mapping.dascot.sarouting import sim_anneal_route
 from .types import (
     Mapping,
     Routing,
@@ -16,14 +16,13 @@ from .types import (
     Architectures,
     parse_architecture_safe,
 )
-from dataclasses import asdict
 import signal
 
 
 class Dascot:
-    def __init__(self, mapping_timeout: int, routing_timeout: int):
-        self.map_timeout = mapping_timeout
-        self.route_timeout = routing_timeout
+    def __init__(self, mapping_timeout_sec: int, routing_timeout_sec: int):
+        self.map_timeout_sec = mapping_timeout_sec
+        self.route_timeout_sec = routing_timeout_sec
 
     def extract_circuit_from_file(
         self, file_path: str, arch_type: Architectures
@@ -56,7 +55,7 @@ class Dascot:
             mapping.arch.__dict__,
             initial_mapping=initial_mapping,  # Pass in the mapping as the initial mapping
             include_t=True,
-            timeout=self.map_timeout,
+            timeout=self.map_timeout_sec,
             *scaled_sim_anneal_params,
         )
         # Turn the phased map into a dict
@@ -80,7 +79,7 @@ class Dascot:
             qcircuit,
             circuit.arch.__dict__,
             include_t=True,
-            timeout=self.map_timeout,
+            timeout=self.map_timeout_sec,
             *scaled_sim_anneal_params,
         )
         # Turn the phased map into a dict
@@ -89,7 +88,7 @@ class Dascot:
 
     def route(self, mapping: Mapping) -> Routing | None:
         signal.signal(signal.SIGALRM, timeout_handler)
-        signal.alarm(self.route_timeout)
+        signal.alarm(self.route_timeout_sec)
         steps: list | None = None
         map_dict = {int(k): v for k, v in mapping.map.items()}
 

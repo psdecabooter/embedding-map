@@ -2,15 +2,7 @@ import psycopg
 from psycopg import sql
 import pandas as pd
 from dataclasses import dataclass
-
-
-@dataclass
-class ConnectionConfig:
-    host: str
-    port: int
-    user: str
-    password: str
-    dbname: str
+from embeddings.embedding_types import ConnectionConfig
 
 
 class EmbeddingConnection(object):
