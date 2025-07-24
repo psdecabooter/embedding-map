@@ -2,8 +2,6 @@ import pandas as pd
 import json
 import sys
 import os
-import time
-
 import torch
 from similarity_mapping import dascot_connection, db_connection
 from similarity_mapping.similarity_map import SimilarityMapper
@@ -14,7 +12,6 @@ from similarity_mapping.types import (
     parse_mapping_safe,
 )
 from embeddings.semantic_embeddings import SemanticEmbeddingGenerator
-from embeddings import embedding_types
 
 CONNECTION = ConnectionConfig(
     host="172.25.208.1",
@@ -28,7 +25,7 @@ NUM_ROUTINGS = 5
 
 
 def main():
-    if len(sys.argv) != 4:
+    if len(sys.argv) != 5:
         print(
             """Usage: Expects the path of the benchmark file, 
             then the path to the circuits directory,
