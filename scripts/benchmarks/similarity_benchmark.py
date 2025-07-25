@@ -82,7 +82,7 @@ def main():
                 routing_sum += len(routing.steps)
                 current_routing_sum += len(routing.steps)
             # Check if best mapping
-            if best_routing_avg > (current_routing_sum / NUM_ROUTINGS):
+            if best_routing_avg >= (current_routing_sum / NUM_ROUTINGS):
                 best_routing_avg = current_routing_sum / NUM_ROUTINGS
                 best_mapping = mapping
         # append to data
