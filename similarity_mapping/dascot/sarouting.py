@@ -393,6 +393,7 @@ def sim_anneal_route(
         crit_dict = build_crit_dict_fast(gates_id_table)
     tried_steps = 0
     while len(gates_id_table) != 0:
+        # print(len(gates_id_table))
         executable, remaining = executable_subset(gates_id_table)
         step, tried = best_realizable_set_found(
             gates_id_table,

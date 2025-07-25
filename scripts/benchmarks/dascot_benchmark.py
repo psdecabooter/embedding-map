@@ -26,6 +26,7 @@ def main():
             "Architecture type must either be: square_sparse_layout or compact_layout"
         )
         exit(1)
+    print("Starting DASCOT")
     benchmark_df = pd.read_csv(file_path)
     best_mappings = []
     route_average = []
@@ -37,12 +38,12 @@ def main():
         qasm_file_path = os.path.join(circuits_directory, circuit)
         if not os.path.exists(qasm_file_path):
             continue
-        dascot = dascot_connection.Dascot(0, 0)
+        dascot = dascot_connection.Dascot(300, 300)
         circuit = dascot.extract_circuit_from_file(qasm_file_path, arch_type)
         # Save useful data per file
         routing_sum = 0
         map_time_sum = 0
-        best_routing_avg = 0
+        best_routing_avg = len(circuit.gates)
         best_mapping: Mapping | None = None
         for i in range(NUM_MAPPINGS):
             # Map
@@ -58,7 +59,7 @@ def main():
                 routing_sum += len(routing.steps)
                 current_routing_sum += len(routing.steps)
             # Check if best mapping
-            if best_routing_avg < (current_routing_sum / NUM_ROUTINGS):
+            if best_routing_avg > (current_routing_sum / NUM_ROUTINGS):
                 best_routing_avg = current_routing_sum / NUM_ROUTINGS
                 best_mapping = mapping
         # append to data

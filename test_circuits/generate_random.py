@@ -26,6 +26,7 @@ def make_qasm_text(num_qubits: int, circ_len: int) -> str:
 
 CIRCUIT_LENGTH = 100
 QUBIT_MAX = 30
+QUBIT_MIN = 3 # Dascot doesn't like 2 qubit circuits
 NUMBER_FILES = 200
 
 
@@ -39,7 +40,7 @@ def main():
     directory = sys.argv[1]
 
     for i in range(NUMBER_FILES):
-        qubits = random.randint(2, QUBIT_MAX)
+        qubits = random.randint(QUBIT_MIN, QUBIT_MAX)
         file_name = f"{qubits}q_{CIRCUIT_LENGTH}gates_{i}.qasm"
         file_text = make_qasm_text(qubits, CIRCUIT_LENGTH)
         with open(os.path.join(directory, file_name), "w") as f:
