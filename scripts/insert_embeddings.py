@@ -2,7 +2,8 @@ from embeddings import db_connection
 import sys
 
 CONNECTION = db_connection.ConnectionConfig(
-    host="172.25.208.1",
+    # host="172.25.208.1",
+    host="localhost",
     port=5432,
     user="postgres",
     password="postgres",

@@ -12,9 +12,9 @@ import torch
 
 CONNECTION = ConnectionConfig(
     # host="host.docker.internal",
-    # host="localhost",
+    host="localhost",
     # host="0.0.0.0",
-    host="172.25.208.1",
+    # host="172.25.208.1",
     port=5432,
     user="postgres",
     password="postgres",
