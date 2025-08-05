@@ -25,9 +25,9 @@ def make_qasm_text(num_qubits: int, circ_len: int) -> str:
 
 
 CIRCUIT_LENGTH = 100
-QUBIT_MAX = 30
-QUBIT_MIN = 3 # Dascot doesn't like 2 qubit circuits
-NUMBER_FILES = 200
+QUBIT_MAX = 10
+QUBIT_MIN = 3  # Dascot doesn't like 2 qubit circuits
+NUMBER_FILES = 50
 
 
 def main():
@@ -38,6 +38,11 @@ def main():
         print("Usage: requires argument of a directory name")
         exit(1)
     directory = sys.argv[1]
+    if not os.path.exists(directory):
+        os.makedirs(directory)
+    elif not os.path.isdir(directory):
+        print(f"Expected a directory at {directory}")
+        exit(1)
 
     for i in range(NUMBER_FILES):
         qubits = random.randint(QUBIT_MIN, QUBIT_MAX)
