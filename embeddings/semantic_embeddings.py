@@ -32,7 +32,9 @@ class SemanticEmbeddingGenerator(object):
         del data["map"]
         embedding_text = json.dumps(data)
         # print(file_path)
-        return pd.DataFrame([{"mapping": mapping, "embedding_text": embedding_text}])
+        return pd.DataFrame(
+            [{"mapping": mapping, "name": file_path, "embedding_text": embedding_text}]
+        )
 
     async def read_sat_data(self, directory_path: str):
         sparse_paths = []

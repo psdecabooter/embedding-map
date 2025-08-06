@@ -1,6 +1,6 @@
+import argparse
 import pandas as pd
 import json
-import sys
 import os
 import time
 from similarity_mapping import dascot_connection
@@ -11,16 +11,24 @@ NUM_ROUTINGS = 5
 
 
 def main():
-    if len(sys.argv) != 4:
-        print(
-            """Usage: Expects the path of the benchmark file, 
-            then the path to the circuits directory, 
-            then the architecture type"""
-        )
+    parser = argparse.ArgumentParser(
+        description="A script for creting the benchmark file"
+    )
+    parser.add_argument("bench", help="Path to the benchmark file")
+    parser.add_argument("circuits", help="Path to the circuits directory")
+    parser.add_argument(
+        "arch", help="Expects either compact_layout or square_sparse_layout"
+    )
+    args = parser.parse_args()
+    if not os.path.exists(args.bench):
+        print(f"Expected a benchmark file at {args.bench}")
         exit(1)
-    file_path = sys.argv[1]
-    circuits_directory = sys.argv[2]
-    arch_type = parse_arch_type(sys.argv[3])
+    if not os.path.exists(args.circuits) or not os.path.isdir(args.circuits):
+        print(f"Expected a directory at {args.circuits}")
+        exit(1)
+    file_path = args.bench
+    circuits_directory = args.circuits
+    arch_type = parse_arch_type(args.arch)
     if arch_type is None:
         print(
             "Architecture type must either be: square_sparse_layout or compact_layout"
@@ -38,7 +46,7 @@ def main():
         qasm_file_path = os.path.join(circuits_directory, circuit)
         if not os.path.exists(qasm_file_path):
             continue
-        dascot = dascot_connection.Dascot(300, 300)
+        dascot = dascot_connection.Dascot(3000, 3000)
         circuit = dascot.extract_circuit_from_file(qasm_file_path, arch_type)
         # Save useful data per file
         routing_sum = 0

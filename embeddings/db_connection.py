@@ -1,7 +1,6 @@
 import psycopg
 from psycopg import sql
 import pandas as pd
-from dataclasses import dataclass
 from embeddings.embedding_types import ConnectionConfig
 
 
@@ -26,6 +25,7 @@ class EmbeddingConnection(object):
     def create_mappings_table(self, vector_size: int):
         create_table_sql = sql.SQL("""
         CREATE TABLE IF NOT EXISTS mappings (
+            name TEXT,
             mapping JSONB NOT NULL,
             embedding_text JSONB NOT NULL,
             embedding VECTOR({})
@@ -38,14 +38,14 @@ class EmbeddingConnection(object):
     def insert_mappings(self, mappings_path: str):
         mappings_df = pd.read_json(mappings_path)
 
+        print(mappings_df.columns)
         values = [
-            (row.mapping, row.embedding_text, row.embedding)
-            for row in mappings_df.itertuples()
+            (row.name, row.mapping, row.embedding_text, row.embedding) for row in mappings_df.itertuples()
         ]
 
         insert_statement = """
-        INSERT INTO mappings (mapping, embedding_text, embedding)
-        VALUES (%s, %s, %s)
+        INSERT INTO mappings (name, mapping, embedding_text, embedding)
+        VALUES (%s, %s, %s, %s)
         """
 
         self.cursor.executemany(insert_statement, values)

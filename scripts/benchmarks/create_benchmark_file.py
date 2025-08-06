@@ -1,16 +1,20 @@
 import pandas as pd
 import os
-import sys
+import argparse
 
 
 def main():
-    if len(sys.argv) != 3:
-        print(
-            "Usage: Expects the path of the benchmarkfile, then the path to the circuits directory"
-        )
+    parser = argparse.ArgumentParser(
+        description="A script for creting the benchmark file"
+    )
+    parser.add_argument("bench", help="Path to the new benchmark file")
+    parser.add_argument("circuits", help="Path to the circuits directory")
+    args = parser.parse_args()
+    if not os.path.exists(args.circuits) or not os.path.isdir(args.circuits):
+        print(f"Expected a directory at {args.circuits}")
         exit(1)
-    file_path = sys.argv[1]
-    circuits_directory = sys.argv[2]
+    file_path = args.bench
+    circuits_directory = args.circuits
     benchmark_df = pd.DataFrame()
     benchmark_df["file_names"] = os.listdir(circuits_directory)
     benchmark_df.to_csv(file_path, index=False)
