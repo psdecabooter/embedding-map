@@ -1,3 +1,3 @@
-file_names
-4q_100gates_78.qasm
-3q_100gates_16.qasm
+file_names,dascot_routing_avg,dascot_map_time_avg,dascot_best_mapping,dascot_best_mapping_route_avg,similarity_routing_avg,similarity_best_mapping,similarity_best_mapping_route_avg,bootstrapped_routing_avg,bootstrapped_map_time_avg,bootstrapped_best_mapping,bootstrapped_best_mapping_route_avg
+4q_100gates_78.qasm,100.0,4.252327285398496,"{""0"": 16, ""1"": 18, ""2"": 6, ""3"": 8}",100.0,100.0,"{""3"": 8, ""1"": 16, ""0"": 6, ""2"": 18}",100.0,100.0,122.20269624597859,"{""2"": 8, ""3"": 18, ""1"": 6, ""0"": 16}",100.0
+3q_100gates_16.qasm,76.4,6.095317924799747,"{""0"": 8, ""1"": 16, ""2"": 6}",67.0,76.4,"{""1"": 16, ""0"": 18, ""2"": 6}",68.2,75.89333333333333,156.2287493830081,"{""2"": 18, ""1"": 8, ""0"": 16}",67.4
