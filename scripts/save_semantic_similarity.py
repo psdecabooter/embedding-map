@@ -23,7 +23,7 @@ CONNECTION = ConnectionConfig(
 
 def main():
     parser = ArgumentParser(description="A script to find similar mappings")
-    parser.add_argument("path", help="Path to the benchmark dict")
+    parser.add_argument("path", help="Path to the benchmark directory")
     parser.add_argument(
         "arch", help="Expects either compact_layout or square_sparse_layout"
     )

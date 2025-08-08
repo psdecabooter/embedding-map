@@ -91,7 +91,8 @@ def run_dascot(circ, gates, arch, output_path, timeout):
             reward_name="criticality",
             order_fraction=1,
             take_first_ms=False,
-            *[10, 0.1, 0.1],
+            # *[10, 0.1, 0.1],
+            *[10, 0.1, 11],
         )
     except TimeoutException:
         print("Routing timed out. Writing partial output...")
