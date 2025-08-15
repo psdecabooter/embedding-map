@@ -100,7 +100,7 @@ class Dascot:
                 reward_name="criticality",
                 order_fraction=1,
                 take_first_ms=False,
-                *[10, 0.1, 0.1],
+                *[10, 0.1, 100],
             )
             # Parse routes
             routes = [parse_route_unsafe(step) for step in steps]

@@ -40,13 +40,15 @@ class EmbeddingConnection(object):
 
         print(mappings_df.columns)
         values = [
-            (row.name, row.mapping, row.embedding_text, row.embedding) for row in mappings_df.itertuples()
+            (row.name, row.mapping, row.embedding_text, row.embedding)
+            for row in mappings_df.itertuples()
         ]
 
         insert_statement = """
         INSERT INTO mappings (name, mapping, embedding_text, embedding)
         VALUES (%s, %s, %s, %s)
         """
+
 
         self.cursor.executemany(insert_statement, values)
         self.connection.commit()

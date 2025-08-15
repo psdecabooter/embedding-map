@@ -111,7 +111,7 @@ def main():
         best_mappings.append(json.dumps(best_mapping.map))
         route_average.append(routing_sum / (NUM_ROUTINGS * num_similar * NUM_MAPPINGS))
         best_map_route_avg.append(best_routing_avg)
-        map_time_average.append(map_time_sum)
+        map_time_average.append(map_time_sum / (NUM_MAPPINGS * num_similar))
 
     # Record data
     benchmark_df["bootstrapped_routing_avg"] = route_average
