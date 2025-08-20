@@ -1,0 +1,205 @@
+OPENQASM 2.0;
+include "qelib1.inc";
+qreg q[14];
+// Layer 0
+cx q[3], q[0];
+cx q[7], q[6];
+t q[13];
+// Layer 1
+cx q[13], q[11];
+// Layer 2
+cx q[11], q[4];
+// Layer 3
+cx q[11], q[8];
+// Layer 4
+cx q[8], q[10];
+// Layer 5
+cx q[8], q[1];
+// Layer 6
+cx q[1], q[9];
+// Layer 7
+cx q[9], q[5];
+// Layer 8
+cx q[9], q[2];
+// Layer 9
+cx q[9], q[12];
+// Layer 10
+cx q[9], q[2];
+// Layer 11
+cx q[9], q[0];
+// Layer 12
+cx q[0], q[5];
+// Layer 13
+cx q[5], q[8];
+// Layer 14
+cx q[8], q[10];
+// Layer 15
+cx q[8], q[10];
+// Layer 16
+cx q[10], q[8];
+// Layer 17
+cx q[10], q[8];
+// Layer 18
+cx q[8], q[10];
+// Layer 19
+cx q[8], q[10];
+// Layer 20
+cx q[8], q[10];
+// Layer 21
+cx q[8], q[9];
+// Layer 22
+cx q[8], q[9];
+// Layer 23
+cx q[8], q[10];
+// Layer 24
+cx q[8], q[10];
+// Layer 25
+cx q[10], q[8];
+// Layer 26
+cx q[10], q[8];
+// Layer 27
+cx q[8], q[10];
+// Layer 28
+cx q[8], q[1];
+// Layer 29
+cx q[1], q[9];
+// Layer 30
+cx q[9], q[5];
+// Layer 31
+cx q[5], q[9];
+// Layer 32
+cx q[9], q[7];
+// Layer 33
+cx q[7], q[10];
+// Layer 34
+cx q[10], q[9];
+// Layer 35
+cx q[9], q[10];
+// Layer 36
+cx q[10], q[11];
+// Layer 37
+cx q[11], q[10];
+// Layer 38
+cx q[10], q[11];
+// Layer 39
+cx q[11], q[13];
+// Layer 40
+cx q[13], q[8];
+// Layer 41
+cx q[13], q[0];
+// Layer 42
+cx q[13], q[6];
+// Layer 43
+cx q[6], q[13];
+// Layer 44
+cx q[13], q[0];
+// Layer 45
+cx q[0], q[9];
+// Layer 46
+cx q[9], q[1];
+// Layer 47
+cx q[9], q[11];
+// Layer 48
+cx q[9], q[5];
+// Layer 49
+cx q[9], q[5];
+// Layer 50
+cx q[5], q[9];
+// Layer 51
+cx q[9], q[1];
+// Layer 52
+cx q[9], q[2];
+// Layer 53
+cx q[9], q[13];
+// Layer 54
+cx q[9], q[13];
+// Layer 55
+cx q[0], q[9];
+// Layer 56
+cx q[9], q[0];
+// Layer 57
+cx q[9], q[11];
+// Layer 58
+cx q[9], q[0];
+// Layer 59
+cx q[9], q[4];
+// Layer 60
+cx q[9], q[0];
+// Layer 61
+cx q[9], q[0];
+// Layer 62
+cx q[9], q[0];
+// Layer 63
+cx q[9], q[0];
+// Layer 64
+cx q[9], q[11];
+// Layer 65
+cx q[11], q[10];
+// Layer 66
+cx q[10], q[11];
+// Layer 67
+cx q[11], q[10];
+// Layer 68
+cx q[10], q[11];
+// Layer 69
+cx q[11], q[10];
+// Layer 70
+cx q[11], q[7];
+// Layer 71
+cx q[11], q[13];
+// Layer 72
+cx q[11], q[13];
+// Layer 73
+cx q[11], q[13];
+// Layer 74
+cx q[11], q[13];
+// Layer 75
+cx q[13], q[11];
+// Layer 76
+cx q[13], q[9];
+// Layer 77
+cx q[13], q[9];
+// Layer 78
+cx q[9], q[13];
+// Layer 79
+cx q[9], q[13];
+// Layer 80
+cx q[9], q[0];
+// Layer 81
+t q[9];
+// Layer 82
+t q[9];
+// Layer 83
+t q[9];
+// Layer 84
+t q[9];
+// Layer 85
+t q[9];
+// Layer 86
+t q[9];
+// Layer 87
+t q[9];
+// Layer 88
+t q[9];
+// Layer 89
+t q[9];
+// Layer 90
+t q[9];
+// Layer 91
+t q[9];
+// Layer 92
+t q[9];
+// Layer 93
+t q[9];
+// Layer 94
+t q[9];
+// Layer 95
+t q[9];
+// Layer 96
+t q[9];
+// Layer 97
+t q[9];
+// Layer 98
+t q[9];
+// Layer 99
+t q[9];
