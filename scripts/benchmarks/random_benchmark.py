@@ -12,7 +12,7 @@ NUM_ROUTINGS = 5
 
 def main():
     parser = argparse.ArgumentParser(
-        description="A script for benchmarking dascot mapping"
+        description="A script for benchmarking a random mapping"
     )
     parser.add_argument("bench", help="Path to the benchmark file")
     parser.add_argument("circuits", help="Path to the circuits directory")
@@ -34,11 +34,10 @@ def main():
             "Architecture type must either be: square_sparse_layout or compact_layout"
         )
         exit(1)
-    print("Starting DASCOT")
+    print("Starting Random")
     benchmark_df = pd.read_csv(file_path)
     best_mappings = []
     route_average = []
-    map_time_average = []
     best_map_route_avg = []
 
     # Run dascot on each circuit
@@ -50,18 +49,17 @@ def main():
         circuit = dascot.extract_circuit_from_file(qasm_file_path, arch_type)
         # Save useful data per file
         routing_sum = 0
-        map_time_sum = 0
         best_routing_avg = len(circuit.gates)
         best_mapping: Mapping | None = None
         for i in range(NUM_MAPPINGS):
             # Map
-            start_map = time.perf_counter()
-            mapping = dascot.map(circuit)
-            map_time_sum += time.perf_counter() - start_map
+            mapping = dascot.random_map(circuit)
             # Route
             current_routing_sum = 0
             for k in range(NUM_ROUTINGS):
+                # print(mapping)
                 routing = dascot.route(mapping)
+                # print("mapped")
                 if routing is None:
                     continue
                 routing_sum += len(routing.steps)
@@ -74,14 +72,12 @@ def main():
         assert best_mapping is not None  # Should never fail
         best_mappings.append(json.dumps(best_mapping.map))
         route_average.append(routing_sum / (NUM_ROUTINGS * NUM_MAPPINGS))
-        map_time_average.append(map_time_sum / NUM_MAPPINGS)
         best_map_route_avg.append(best_routing_avg)
 
     # Record data
-    benchmark_df["dascot_routing_avg"] = route_average
-    benchmark_df["dascot_map_time_avg"] = map_time_average
-    benchmark_df["dascot_best_mapping"] = best_mappings
-    benchmark_df["dascot_best_mapping_route_avg"] = best_map_route_avg
+    benchmark_df["random_routing_avg"] = route_average
+    benchmark_df["random_best_mapping"] = best_mappings
+    benchmark_df["random_best_mapping_route_avg"] = best_map_route_avg
     benchmark_df.to_csv(file_path, index=False)
 
 

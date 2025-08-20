@@ -5,8 +5,9 @@ from similarity_mapping.dascot.dascot import (
     extract_gates_from_file,
 )
 from similarity_mapping.dascot.architecture import square_sparse_layout, compact_layout
-from similarity_mapping.dascot.phased_graph import build_phased_map
+from similarity_mapping.dascot.phased_graph import build_phased_map, build_random_map
 from similarity_mapping.dascot.sarouting import sim_anneal_route
+import random
 from .types import (
     Mapping,
     Routing,
@@ -35,6 +36,13 @@ class Dascot:
         elif arch_type == Architectures.COMPACT:
             arch = compact_layout(len(qubits), magic_states="all_sides")
         return Circuit(gates=gates, arch=parse_architecture_safe(arch))
+
+    def random_map(self, circuit: Circuit) -> Mapping:
+        qubits = extract_qubits_from_gates(circuit.gates)
+        phased_map = build_random_map(qubits, circuit.arch.__dict__)
+        map_dict = {q: p for (q, p) in phased_map}
+        print(map_dict, qubits, circuit.arch)
+        return Mapping(arch=circuit.arch, gates=circuit.gates, map=map_dict)
 
     def bootstrapped_map(self, mapping: Mapping) -> Mapping:
         qubits = extract_qubits_from_gates(mapping.gates)
@@ -100,7 +108,7 @@ class Dascot:
                 reward_name="criticality",
                 order_fraction=1,
                 take_first_ms=False,
-                *[10, 0.1, 100],
+                *[0.1, 0.1, 0.1],
             )
             # Parse routes
             routes = [parse_route_unsafe(step) for step in steps]

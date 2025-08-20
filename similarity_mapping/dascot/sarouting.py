@@ -389,8 +389,9 @@ def sim_anneal_route(
     # mapping = {q: p for (q, p) in mapping} Removed conversion, doing it earlier
     gates_id_table = {i: gate for i, gate in enumerate(gates)}
     crit_dict = {}
-    if temperature > termination_temp:
-        crit_dict = build_crit_dict_fast(gates_id_table)
+    # if temperature > termination_temp:
+    crit_dict = build_crit_dict_fast(gates_id_table)
+    # print(crit_dict)
     tried_steps = 0
     while len(gates_id_table) != 0:
         # print(len(gates_id_table))
