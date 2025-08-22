@@ -2,7 +2,8 @@ from embeddings import semantic_embeddings
 import torch
 import sys
 
-MODEL_NAME: str = "sentence-transformers/all-MiniLM-L6-v2"
+# MODEL_NAME: str = "sentence-transformers/all-MiniLM-L6-v2"
+MODEL_NAME: str = "Qwen/Qwen3-Embedding-4B"
 
 
 def main():

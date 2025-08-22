@@ -12,8 +12,8 @@ from similarity_mapping.types import (
 )
 
 CONNECTION = ConnectionConfig(
-    host="172.25.208.1",
-    # host="localhost",
+    # host="172.25.208.1",
+    host="localhost",
     port=5432,
     user="postgres",
     password="postgres",
@@ -23,7 +23,7 @@ CONNECTION = ConnectionConfig(
 
 def main():
     parser = ArgumentParser(description="A script to find similar mappings")
-    parser.add_argument("path", help="Path to the benchmark dict")
+    parser.add_argument("path", help="Path to the benchmark directory")
     parser.add_argument(
         "arch", help="Expects either compact_layout or square_sparse_layout"
     )
@@ -56,6 +56,7 @@ def main():
     columns = ["file_names", *[f"similar_{i}" for i in range(num_similar)]]
 
     for qasm_file_path, qasm_name in zip(qasm_files, qasm_names):
+        print(qasm_file_path)
         similar = [qasm_name]
         dascot = dascot_connection.Dascot(3000, 3000)
         circuit = dascot.extract_circuit_from_file(qasm_file_path, arch_type)

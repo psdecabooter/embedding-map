@@ -13,7 +13,7 @@ class SemanticEmbeddingGenerator(object):
         print("Loading model...")
         self.model_name = model_name
         self.device = device
-        self.model = SentenceTransformer(model_name, device=device)
+        self.model = SentenceTransformer(model_name, device=device, )
         print("Model loaded")
 
     async def process_sat_file(self, file_path: str) -> pd.DataFrame | None:
@@ -59,24 +59,29 @@ class SemanticEmbeddingGenerator(object):
         # Get data from the json files
         sparse_df, compact_df = asyncio.run(self.read_sat_data(directory_path))
         # Add embeddings to the dataframes
-        sparse_embeddings = self.model.encode(
-            sparse_df["embedding_text"].to_list(),
-            normalize_embeddings=True,
-            show_progress_bar=True,
-        )
         compact_embeddings = self.model.encode(
             compact_df["embedding_text"].to_list(),
             normalize_embeddings=True,
             show_progress_bar=True,
+            # batch_size = 128,
+        )
+        compact_df["embedding"] = compact_embeddings.tolist()
+        compact_df.to_json(
+            # f"{self.model_name}_compact_embedding_data.json", orient="records", indent=4
+            f"qwen4b_compact_embedding_data.json", orient="records", indent=4
+        )
+
+        sparse_embeddings = self.model.encode(
+            sparse_df["embedding_text"].to_list(),
+            normalize_embeddings=True,
+            show_progress_bar=True,
+            # batch_size = 128,
         )
         sparse_df["embedding"] = sparse_embeddings.tolist()
-        compact_df["embedding"] = compact_embeddings.tolist()
         # Save the dataframes
         sparse_df.to_json(
-            f"{self.model_name}_sparse_embedding_data.json", orient="records", indent=4
-        )
-        compact_df.to_json(
-            f"{self.model_name}_compact_embedding_data.json", orient="records", indent=4
+            # f"{self.model_name}_sparse_embedding_data.json", orient="records", indent=4
+            f"qwen4b_sparse_embedding_data.json", orient="records", indent=4
         )
 
     def generate_embedding_from_file(self, file_path: str) -> torch.Tensor:
