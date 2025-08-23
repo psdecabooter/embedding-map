@@ -1,0 +1,37 @@
+OPENQASM 2.0;
+include "qelib1.inc";
+qreg q[52];
+// Layer 0
+cx q[46], q[9];
+cx q[50], q[43];
+cx q[21], q[14];
+cx q[11], q[36];
+cx q[15], q[27];
+cx q[39], q[5];
+cx q[38], q[3];
+cx q[51], q[16];
+cx q[0], q[31];
+cx q[44], q[42];
+cx q[48], q[33];
+cx q[18], q[47];
+cx q[37], q[6];
+cx q[25], q[28];
+cx q[26], q[23];
+cx q[40], q[12];
+cx q[29], q[20];
+cx q[13], q[2];
+cx q[8], q[10];
+cx q[19], q[17];
+cx q[4], q[49];
+cx q[41], q[45];
+cx q[30], q[35];
+cx q[24], q[1];
+cx q[32], q[34];
+cx q[22], q[7];
+// Layer 1
+cx q[44], q[27];
+cx q[15], q[9];
+cx q[21], q[51];
+cx q[49], q[36];
+t q[16];
+t q[10];
