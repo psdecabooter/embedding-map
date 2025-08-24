@@ -12,3 +12,4 @@ wheels/
 # Other files
 # output/
 # test_circuits/
+qwen*
