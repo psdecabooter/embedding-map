@@ -16,11 +16,18 @@ def main():
         exit(1)
 
     bench_df = pd.read_csv(args.path)
-    bench_df["sort_key"] = bench_df["file_names"].str.extract(r"^(\d+)").astype(int)
-    bench_df = bench_df.sort_values("sort_key").drop("sort_key", axis=1)
+    bench_df['order'] = bench_df['similarity_routing_avg'] - bench_df['random_routing_avg']
+    bench_df = bench_df.sort_values("order")
     print(bench_df["file_names"])
     plt.figure(1)
     plt.title("Layers, ordered by qubits increasing")
+    # random_routing_avg
+    plt.scatter(
+        range(len(bench_df["random_routing_avg"])),
+        bench_df["random_routing_avg"],
+        c="y",
+        label="random_routing_avg",
+    )
     plt.scatter(
         range(len(bench_df["dascot_routing_avg"])),
         bench_df["dascot_routing_avg"],
@@ -42,23 +49,37 @@ def main():
     plt.legend()
 
     plt.figure(2)
-    plt.title("Dascot - Mapping (higher is better), ordered by qubits increasing")
-    x = bench_df.index
+    plt.title("Random - Mapping (higher is better), ordered by qubits increasing")
+    x = range(len(bench_df))
     similarity_diffs = np.array(
         [
-            dascot - similar
-            for similar, dascot in zip(
-                bench_df["similarity_routing_avg"], bench_df["dascot_routing_avg"]
+            random - similar
+            for similar, random in zip(
+                bench_df["similarity_routing_avg"], bench_df["random_routing_avg"]
             )
         ]
     )
     bootstrapped_diffs = np.array(
         [
-            dascot - bootstrap
-            for bootstrap, dascot in zip(
-                bench_df["bootstrapped_routing_avg"], bench_df["dascot_routing_avg"]
+            random - bootstrap
+            for bootstrap, random in zip(
+                bench_df["bootstrapped_routing_avg"], bench_df["random_routing_avg"]
             )
         ]
+    )
+    dascot_diffs = np.array(
+        [
+            random - dascot
+            for dascot, random in zip(
+                bench_df["dascot_routing_avg"], bench_df["random_routing_avg"]
+            )
+        ]
+    )
+    plt.scatter(
+        x,
+        dascot_diffs,
+        c="r",
+        label="dascot_routing_avg",
     )
     plt.scatter(
         x,
@@ -74,15 +95,25 @@ def main():
     )
 
     # Line of best fits
-    dsct_coef = np.polyfit(x, similarity_diffs, 1)
+    dsct_coef = np.polyfit(x, dascot_diffs, 1)
     dsct_lobf = np.poly1d(dsct_coef)
     dsct_y_fit = dsct_lobf(x)
+    sim_coef = np.polyfit(x, similarity_diffs, 1)
+    sim_lobf = np.poly1d(sim_coef)
+    sim_y_fit = sim_lobf(x)
     boot_coef = np.polyfit(x, bootstrapped_diffs, 1)
     boot_lobf = np.poly1d(boot_coef)
     boot_y_fit = boot_lobf(x)
     plt.plot(
         x,
         dsct_y_fit,
+        "r-",
+        label=f"Line of best fit: y = {dsct_coef[0]:.3f}x + {dsct_coef[1]:.3f}",
+        c="r",
+    )
+    plt.plot(
+        x,
+        sim_y_fit,
         "r-",
         label=f"Line of best fit: y = {dsct_coef[0]:.3f}x + {dsct_coef[1]:.3f}",
         c="g",

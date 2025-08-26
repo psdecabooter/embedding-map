@@ -2,7 +2,6 @@ import argparse
 import pandas as pd
 import json
 import os
-import time
 from similarity_mapping import dascot_connection
 from similarity_mapping.types import parse_arch_type, Mapping
 
