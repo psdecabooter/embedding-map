@@ -75,7 +75,7 @@ def main():
             mapping = mapper.soft_map()
             # Route
             current_routing_sum = 0
-            for k in range(NUM_ROUTINGS):
+            for _ in range(NUM_ROUTINGS):
                 routing = dascot.route(mapping)
                 if routing is None:
                     continue

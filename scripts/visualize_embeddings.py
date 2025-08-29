@@ -16,7 +16,7 @@ def main():
     data_2d = reducer.fit_transform(list(embed_df["embedding"]))
     plt.figure(figsize=(12, 8))
     print("reducing")
-    scatter = plt.scatter(data_2d[:, 0], data_2d[:, 1], c="b", cmap="Spectral", s=5)  # type: ignore
+    scatter = plt.scatter(data_2d[:, 0], data_2d[:, 1], c="b", s=5)  # type: ignore
     plt.colorbar(scatter)
     plt.title("UMAP Projection of High-Dimensional Embeddings")
     plt.xlabel("UMAP 1")

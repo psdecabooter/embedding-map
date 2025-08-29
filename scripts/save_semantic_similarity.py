@@ -64,7 +64,8 @@ def main():
         text_embedding = embedder.generate_embedding_from_circuit(asdict(circuit))
         similar_mappings = db.retrieve_similar(text_embedding, num_similar)
         for mapping in similar_mappings:
-            similar.append(mapping[1])
+            # similar.append(mapping[1])
+            similar.append(mapping[0])
         saved_similar.append(similar)
 
     df = pd.DataFrame(saved_similar, columns=columns)
