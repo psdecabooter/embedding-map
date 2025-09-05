@@ -10,7 +10,7 @@ from dataclasses import asdict
 from embeddings.semantic_embeddings import SemanticEmbeddingGenerator
 from similarity_mapping import dascot_connection
 from similarity_mapping.db_connection import MappingConnection, ConnectionConfig
-from similarity_mapping.types import parse_arch_type
+from similarity_mapping.types import parse_arch_type, parse_mapping_safe, save_routing
 
 SIMILAR = 10
 CONNECTION = ConnectionConfig(
@@ -26,17 +26,18 @@ def main():
     print("starting")
     parser = argparse.ArgumentParser()
     parser.add_argument("source", help="Source qasm")
-    parser.add_argument("target", help="Target qasm")
+    # parser.add_argument("sim",help="similarity csv")
     parser.add_argument("arch", help="Architecture for embedding")
     parser.add_argument("model", help="Model for embeddings")
+    parser.add_argument("--save", "-s",help="Save figure and outputs")
     # parser.add_argument("path", help="Path to embeddings json")
     args = parser.parse_args()
     if not str(args.source).endswith(".qasm") or not os.path.exists(args.source):
         print(f"Expected a qasm file at {args.source}")
         exit(1)
-    if not str(args.target).endswith(".qasm") or not os.path.exists(args.target):
-        print(f"Expected a qasm file at {args.target}")
-        exit(1)
+    # if not str(args.sim).endswith(".csv") or not os.path.exists(args.csv):
+    #     print(f"Expected a csv file at {args.csv}")
+    #     exit(1)
     arch_type = parse_arch_type(args.arch)
     if arch_type is None:
         print(
@@ -44,6 +45,8 @@ def main():
         )
         exit(1)
     model_name = args.model
+    # sim_df = pd.read_csv(args.sim)
+    
     # Start connection
     device = "cuda" if torch.cuda.is_available() else "cpu"
     embedder = SemanticEmbeddingGenerator(model_name, device)
@@ -57,7 +60,8 @@ def main():
     source_embedding = embedder.generate_embedding_from_circuit(asdict(source_circuit))
 
     # Target
-    target_circuit = dascot.extract_circuit_from_file(args.target, arch_type)
+    target_circuit = dascot.extract_circuit_from_file(args.source, arch_type)
+    target_circuit.gates.append(target_circuit.gates[-1])
     target_embedding = embedder.generate_embedding_from_circuit(asdict(target_circuit))
 
     # Similar
@@ -91,7 +95,29 @@ def main():
     plt.scatter(similar_2d[:, 0], similar_2d[:, 1], c="g", s=5)  # type: ignore
     plt.scatter(target_2d[:, 0], target_2d[:, 1], c="y", s=5)  # type: ignore
     plt.scatter(source_2d[:, 0], source_2d[:, 1], c="r", s=5)  # type: ignore
+    if args.save is None:
+        plt.show()
+        exit()
+    
+    if not os.path.isdir(args.save):
+        print(f"expecting a dir at {args.save}")
+        exit(1)
+
+    plt.savefig(os.path.join(args.save,"similar_fig.png"))
+    sroute = dascot.route(dascot.map(source_circuit))
+    assert sroute is not None
+    save_routing(sroute, os.path.join(args.save,"source.json"))
+    troute = dascot.route(dascot.map(target_circuit))
+    assert troute is not None
+    save_routing(troute, os.path.join(args.save,"modified.json"))
+    similar_mapping_obj = [parse_mapping_safe(mapping) for mapping in similar_mappings['mapping']]
+    for i,mapping in enumerate(similar_mapping_obj):
+        routing = dascot.route(mapping)
+        if routing is None:
+            continue
+        save_routing(routing, os.path.join(args.save,f"similar{i}.json"))
     plt.show()
+    
 
 if __name__ == "__main__":
     main()

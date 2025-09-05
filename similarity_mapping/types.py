@@ -1,4 +1,5 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, asdict
+import json
 from typing import Any
 from qiskit import QuantumCircuit
 from enum import Enum
@@ -76,6 +77,10 @@ class Routing:
     arch: Architecture
     gates: list[list[int]]
 
+def save_routing(routing: Routing, path: str):
+    with open(path, 'w') as f:
+        f.write(json.dumps(asdict(routing)))
+    
 
 def qasm_from_gates(gates: list[list[int]], num_qubits: int) -> QuantumCircuit:
     qcircuit = QuantumCircuit(num_qubits)
